@@ -1,6 +1,7 @@
 package com.example.demo.user;
 
 import com.example.demo.user.model.AuthUserDetails;
+import com.example.demo.user.model.EmailVerify;
 import com.example.demo.user.model.User;
 import com.example.demo.user.model.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,20 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final EmailVerifyRepository emailVerifyRepository;
 
     public UserDto.SignupRes signup(UserDto.SignupReq dto) {
         User user = dto.toEntity();
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         userRepository.save(user);
 
-        emailService.sendWelcomeMail(dto.getEmail());
+        // 메일 전송
+        String uuid = UUID.randomUUID().toString();
+        emailService.sendWelcomeMail(uuid, dto.getEmail());
+
+        // 메일 전송 내역 저장
+        EmailVerify emailVerify = EmailVerify.builder().email(dto.getEmail()).uuid(uuid).build();
+        emailVerifyRepository.save(emailVerify);
 
         return UserDto.SignupRes.from(user);
     }

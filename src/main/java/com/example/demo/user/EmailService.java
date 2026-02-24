@@ -14,10 +14,9 @@ import java.util.UUID;
 public class EmailService {
     private final JavaMailSender mailSender;
 
-    public void sendWelcomeMail(String email){
+    public String sendWelcomeMail(String uuid, String email){
         MimeMessage message  = mailSender.createMimeMessage();
         try {
-            String uuid = UUID.randomUUID().toString();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(email);
             String subject = "[안녕] 환영";
@@ -25,6 +24,8 @@ public class EmailService {
             helper.setSubject(subject);
             helper.setText(htmlContents, true);
             mailSender.send(message);
+
+            return uuid;
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
