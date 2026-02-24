@@ -26,5 +26,11 @@ public class BoardController {
         List<BoardDto.ListRes> dto = boardService.list();
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping("/read/{idx}")
+    public ResponseEntity read(@PathVariable Long idx) {
+        BoardDto.ReadRes dto = boardService.read(idx);
+        return ResponseEntity.ok(dto);
+    }
 }
 

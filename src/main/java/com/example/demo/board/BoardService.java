@@ -22,4 +22,9 @@ public class BoardService {
         List<Board> boardList = boardRepository.findAll();
         return boardList.stream().map(BoardDto.ListRes::from).toList();
     }
+
+    public BoardDto.ReadRes read(Long idx) {
+        Board board = boardRepository.findById(idx).orElseThrow();
+        return BoardDto.ReadRes.from(board);
+    }
 }

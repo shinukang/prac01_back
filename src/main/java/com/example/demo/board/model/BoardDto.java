@@ -46,5 +46,19 @@ public class BoardDto {
         }
     }
 
+    @Builder
+    @Getter
+    public static class ReadRes {
+        private Long idx;
+        private String title;
+        private String contents;
 
+        public static ReadRes from(Board entity) {
+            return ReadRes.builder()
+                    .idx(entity.getIdx())
+                    .title(entity.getTitle())
+                    .contents(entity.getContents())
+                    .build();
+        }
+    }
 }
