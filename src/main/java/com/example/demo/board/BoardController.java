@@ -17,6 +17,7 @@ public class BoardController {
 
     @PostMapping("/reg")
     public ResponseEntity register(@RequestBody BoardDto.RegReq dto) {
+
         BoardDto.RegRes result = boardService.register(dto);
         return ResponseEntity.ok(BaseResponse.success(result));
     }
