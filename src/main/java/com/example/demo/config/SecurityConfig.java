@@ -21,6 +21,8 @@ package com.example.demo.config;
 */
 
 import com.example.demo.config.filter.JwtFilter;
+import com.example.demo.config.oauth2.OAuth2AuthentificationSuccessHandler;
+import com.example.demo.user.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +47,8 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
+    private final OAuth2UserService oAuth2UserService;
+    private final OAuth2AuthentificationSuccessHandler oAuth2AuthentificationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -63,10 +67,17 @@ public class SecurityConfig {
                 (auth) -> auth
                         .requestMatchers("/user/login", "/user/signup", "/user/verify").permitAll()
                         .requestMatchers("/board/reg").authenticated()
-//                        .anyRequest().authenticated()
+                        //.anyRequest().authenticated()
                         .anyRequest().permitAll()
         );
-
+        http.oauth2Login(config -> {
+            // 서비스 제공자로부터 전달받은 사용자 정보를 처리할 클래스 등록
+            config.userInfoEndpoint(
+                    endPoint -> endPoint.userService(oAuth2UserService)
+            );
+            // OAuth2 로그인이 최종적으로 성공했을 때 클라이언트로 응답을 보내는 핸들러 클래스 등록
+            config.successHandler(oAuth2AuthentificationSuccessHandler);
+        });
         http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);

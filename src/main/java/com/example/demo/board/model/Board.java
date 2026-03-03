@@ -25,7 +25,7 @@ public class Board extends BaseEntity {
 
     @Column(nullable = false, length = 100)
     private String title;
-    @ColumnDefault("Hello World")
+    @ColumnDefault("'Hello World'")
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
