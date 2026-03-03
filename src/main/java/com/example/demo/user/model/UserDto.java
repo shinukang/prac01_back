@@ -17,23 +17,43 @@ public class UserDto {
         private String role;
 
         public static OAuth from(Map<String, Object> attributes, String provider) {
-            String providerId = ((Long) attributes.get("id")).toString();
-            System.out.println(providerId);
-
-            String email = providerId + "@kakao.social";
-            Map properties = (Map) attributes.get("properties");
-            String name = (String) properties.get("nickname");
-
-            return OAuth.builder()
-                    .email(email)
-                    .name(name)
-                    .provider(provider)
-                    .enable(true)
-                    .role("ROLE_USER")
-                    .build();
+            switch (provider) {
+                case "kakao": return fromKakao(attributes);
+                case "google": return fromGoogle(attributes);
+                default: return null;
+            }
         }
 
-        public User toEntity() {
+         private static OAuth fromKakao(Map<String, Object> attributes) {
+             String providerId = ((Long) attributes.get("id")).toString();
+             String email = providerId + "@kakao.social";
+             Map properties = (Map) attributes.get("properties");
+             String name = (String) properties.get("nickname");
+
+             return OAuth.builder()
+                     .email(email)
+                     .name(name)
+                     .provider("kakao")
+                     .enable(true)
+                     .role("ROLE_USER")
+                     .build();
+         }
+
+         private static OAuth fromGoogle(Map<String, Object> attributes) {
+             String providerId = (String) attributes.get("sub");
+             String email = providerId + "@google.social";
+             String name = (String) attributes.get("name");
+
+             return OAuth.builder()
+                     .email(email)
+                     .name(name)
+                     .provider("google")
+                     .enable(true)
+                     .role("ROLE_USER")
+                     .build();
+         }
+
+         public User toEntity() {
             return User.builder()
                     .email(this.email)
                     .name(this.name)
