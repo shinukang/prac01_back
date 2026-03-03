@@ -22,6 +22,7 @@ package com.example.demo.config;
 
 import com.example.demo.config.filter.JwtFilter;
 import com.example.demo.config.oauth2.OAuth2AuthentificationSuccessHandler;
+import com.example.demo.config.oauth2.OAuth2AuthorizationRequestRepository;
 import com.example.demo.user.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -50,6 +51,7 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2AuthentificationSuccessHandler oAuth2AuthentificationSuccessHandler;
+    private final OAuth2AuthorizationRequestRepository oAuth2AuthorizationRequestRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -82,6 +84,9 @@ public class SecurityConfig {
             );
             // OAuth2 로그인이 최종적으로 성공했을 때 클라이언트로 응답을 보내는 핸들러 클래스 등록
             config.successHandler(oAuth2AuthentificationSuccessHandler);
+            config.authorizationEndpoint(
+                    endpoint -> endpoint.authorizationRequestRepository(oAuth2AuthorizationRequestRepository)
+            );
         });
         http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
