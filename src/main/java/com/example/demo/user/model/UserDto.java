@@ -1,5 +1,6 @@
 package com.example.demo.user.model;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,8 +8,11 @@ public class UserDto {
 
     @Getter
     public static class SignupReq {
+        @Pattern(message = "이메일 형식이 아닙니다.", regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
         private String email;
+        @Pattern(message = "이름은 한글로만 가능합니다.", regexp = "^[가-힣]{2,5}$")
         private String name;
+        @Pattern(message = "비밀번호 양식이 틀렸습니다.", regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$")
         private String password;
 
         public User toEntity() {
