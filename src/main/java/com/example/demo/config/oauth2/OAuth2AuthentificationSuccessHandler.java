@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -14,12 +15,14 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2AuthentificationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtUtil jwtUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        System.out.println("OAuth 2.0 로그인 성공");
+        log.debug("OAuth 2.0 로그인 성공 디버그");
+        log.error("OAuth 2.0 로그인 성공 에러");
 
         AuthUserDetails user = (AuthUserDetails) authentication.getPrincipal();
 
