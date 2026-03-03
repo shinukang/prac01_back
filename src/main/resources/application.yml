@@ -2,6 +2,9 @@ jwt:
   secret: ${JWT_SECRET}
   expire: ${JWT_EXPIRE}
 
+project:
+  aes:
+    key: FDSFDSP32JFPOID90F32ND2OPVMVASDD
 
 spring:
   application:
